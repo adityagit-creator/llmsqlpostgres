@@ -51,7 +51,7 @@ Replace the message with your custom natural language query.
 ---
 
 ## 🖼️ Output Display Options
-  ![Alt Text](https://github.com/username/repo-name/blob/branch-name/path/to/image.png?raw=true)
+  ![Output](https://github.com/adityagit-creator/llmsqlpostgres/blob/main/Screenshot%202025-07-23%20184442.png)
 ## 🛡️ Allowed Queries
 
 ✅ Supported SQL operations:
