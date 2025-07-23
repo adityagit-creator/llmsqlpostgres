@@ -47,7 +47,4 @@ app.include_router(chatbot_router, prefix="/api")
 
 @app.get("/")
 async def read_root():
-    """
-    Root endpoint for basic health check.
-    """
     return {"message": "Welcome to the LLM SQL Chatbot API!"}
