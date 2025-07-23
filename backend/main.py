@@ -1,35 +1,29 @@
-# llm-sql-chatbot/backend/main.py
-# This is the main entry point for the FastAPI application.
-# ---
 import sys
 import os
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-
-# Ensure absolute imports work by adding project root to sys.path
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.insert(0, project_root)
-
 from backend.api.chatbot_routes import router as chatbot_router
 import logging
 
-# Configure logging
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, project_root)
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Initialize the FastAPI application
 app = FastAPI(
     title="LLM SQL Chatbot",
     description="A chatbot that translates natural language to SQL queries and executes them on PostgreSQL.",
     version="1.0.0",
 )
 
-# Configure CORS middleware
+
 origins = [
     "http://localhost",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
-    "null",
+    "null", 
+    "http://127.0.0.1:5500", 
 ]
 
 app.add_middleware(
@@ -40,7 +34,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include the chatbot API routes
+@app.options("/{path:path}")
+async def options_handler(request: Request, path: str):
+    response = Response(status_code=200)
+    response.headers["Access-Control-Allow-Origin"] = request.headers.get("Origin") or "*"
+    response.headers["Access-Control-Allow-Methods"] = request.headers.get("Access-Control-Request-Method") or "*"
+    response.headers["Access-Control-Allow-Headers"] = request.headers.get("Access-Control-Request-Headers") or "*"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    response.headers["Access-Control-Max-Age"] = "86400"
+    return response
 app.include_router(chatbot_router, prefix="/api")
 
 @app.get("/")
@@ -49,5 +51,3 @@ async def read_root():
     Root endpoint for basic health check.
     """
     return {"message": "Welcome to the LLM SQL Chatbot API!"}
-
-# --- END of main.py ---
